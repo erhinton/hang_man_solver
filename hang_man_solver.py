@@ -1,6 +1,20 @@
 import string
 
 class solver:
+    """ class that provides every possible hangman solution given a .txt file of words
+    
+    Attributes:
+        path (string): a string that contains the path to a txt containing all english words
+        letter_count (dictionary): a dictionary that contains the number of a 
+            particular letter present in a given word
+        all_words (set): a set that contains all words in the chosen text file
+        valid_words (set): a set containing every word that could be the answer 
+            to the hangman problem
+        correct_guesses (list): list of letters that were determined to be correct
+        chosen_letter (string): string that is the letter recommended to be guessed
+        best_guess (string): string that contains correct letters and '*' as a blank space
+        
+    """
     def __init__(self,path):
         self.letter_count = dict.fromkeys(string.ascii_lowercase, 0)
         self.all_words = set()
