@@ -1,5 +1,5 @@
 from tkinter import * # change this to only import stuff you need
-
+from hang_man_solver import *
 
 # set up window
 root = Tk()
@@ -18,7 +18,11 @@ length_menu.pack()
 def on_submit():
     submission = tkvar.get()
     if submission:
-        print(submission)
+        if __name__ == "__main__":
+            main("scrabble_words.txt", int(submission))
+        else:
+            pass
+            
     
 submit_button = Button(root, text='Submit',  command=on_submit)
 submit_button.pack()
@@ -26,4 +30,4 @@ submit_button.pack()
 
 root.mainloop()
 
-# longest possible word is 16
+

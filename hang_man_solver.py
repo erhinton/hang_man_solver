@@ -10,15 +10,18 @@ class solver:
         all_words (set): a set that contains all words in the chosen text file
         valid_words (set): a set containing every word that could be the answer 
             to the hangman problem
+        word_length (int): the number from 1 - 16 that is the length of the 
+            executioner's word
         guesses (list): list of letters that were determined to be correct
         chosen_letter (string): string that is the letter recommended to be guessed
         best_guess (string): string that contains correct letters and '*' as a blank space
         
     """
-    def __init__(self,path):
+    def __init__(self, path, word_length):
         self.letter_count = dict.fromkeys(string.ascii_lowercase, 0)
         self.all_words = set()
         self.valid_words = set()
+        self.word_length = word_length
         self.guesses = []
         self.chosen_letter = ""
         with open(path,'r',encoding='utf-8') as f:
@@ -26,8 +29,7 @@ class solver:
                 item = item.strip()
                 self.all_words.add(item.lower())
                 
-        self.best_guess = input("Enter the word the executioner has chosen " + 
-                                "with each blank as a star (*). \n")
+        self.best_guess = '*' * word_length # should be a star for each letter
         
     def word_length_check(self):
         """ Filters out all words that are not the same length as best_guess
@@ -96,13 +98,13 @@ class solver:
         self.valid_words = self.valid_words.difference(wrong_words)
         
 
-def main(path):
+def main(path, word_length):
     """Creates instace of solver object and runs it while there are remaining blank spaces"""
-    game = solver(path)
+    game = solver(path, word_length)
     game.word_length_check()
     while "*" in game.best_guess:
         game.letter_picker()
         game.results_of_guess()
     
-if __name__ == "__main__":
-    main("scrabble_words.txt")
+if __name__ == "__main__": # tesing code delete later
+    main("scrabble_words.txt", 5)
