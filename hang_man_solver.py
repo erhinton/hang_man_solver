@@ -102,9 +102,11 @@ def main(path, word_length):
     """Creates instace of solver object and runs it while there are remaining blank spaces"""
     game = solver(path, word_length)
     game.word_length_check()
-    while "*" in game.best_guess:
-        game.letter_picker()
-        game.results_of_guess()
+    return game
+    # print(game.valid_words)
+    # while "*" in game.best_guess:
+    #     game.letter_picker()
+    #     game.results_of_guess()
     
 if __name__ == "__main__": # tesing code delete later
     main("scrabble_words.txt", 5)
