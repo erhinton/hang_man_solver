@@ -40,19 +40,33 @@ class WordLengthDropDown:
         root.geometry('700x500')
         scrollbar = Scrollbar(root)
         scrollbar.pack(side=LEFT, fill=Y)
-        textbox = Text(root, width=23)
-        textbox.place(x=15,y=0)
+        valid_words_textbox = Text(root, width=23)
+        valid_words_textbox.place(x=15,y=0)
         
-        # attach textbox to scrollbar
-        textbox.config(yscrollcommand=scrollbar.set, state=DISABLED)
-        scrollbar.config(command=textbox.yview)
+        # attach valid_words_textbox to scrollbar
+        valid_words_textbox.config(yscrollcommand=scrollbar.set, state=DISABLED)
+        scrollbar.config(command=valid_words_textbox.yview)
         
-        # add words into text box
+        # create instance of solver class
         game = main(self.path, int(self.word_length))
-        textbox.configure(state="normal")
-        for word in game.valid_words:
-            textbox.insert(END, f"{word}\n")
-        textbox.configure(state="disable")
+        game.letter_picker()
+
+        # add words into text box
+        def update_valid_words_textbox (valid_words_textbox, game):
+            valid_words_textbox.configure(state="normal")
+            valid_words_textbox.delete('1.0',END)
+            for word in game.valid_words:
+                valid_words_textbox.insert(END, f"{word}\n")
+            valid_words_textbox.configure(state="disable")
+        update_valid_words_textbox (valid_words_textbox, game)
+        
+        # add dynamic text that changes based on what you should guess
+        chosen_letter_label = Text(root, height=2, width=18)
+        chosen_letter_label.place(x = 300, y = 100)
+        chosen_letter_label.insert(END, f"Best guess is {game.chosen_letter}")
+
+        
+
         
         # build entry boxes that allow for character entry (correctly identified letters)
         entry_boxes = dict()
@@ -63,17 +77,34 @@ class WordLengthDropDown:
             x_value_margin += 18
         
         # build button that shows submits entry boxes
-        def on_next(entry_boxes):
+        def on_next(entry_boxes, game):
             complete_word = ""
             for box in entry_boxes:
                 letter = entry_boxes[box].get()
+                letter = letter.lower()
                 if letter == "":
                     letter = "*"
                 complete_word = complete_word + letter
-                print(complete_word)
+                
+            if '*' in complete_word:
+                game.best_guess = complete_word
+                
+                game.results_of_guess()
+                update_valid_words_textbox(valid_words_textbox, game)
+                
+                game.letter_picker()
+                
+                chosen_letter_label.delete('1.0',END)
+                chosen_letter_label.insert(END, f"Best guess is {game.chosen_letter}")
+            else:
+                # if the game is over
+                chosen_letter_label.delete('1.0',END)
+                chosen_letter_label.insert(END, f"The final word is {complete_word}!")
+                
+
             
         
-        next_button = Button(root, text='Next Guess',  command= lambda: on_next(entry_boxes))
+        next_button = Button(root, text='Next Guess',  command= lambda: on_next(entry_boxes,game))
         next_button.pack()
         
         

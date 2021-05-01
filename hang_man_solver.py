@@ -61,11 +61,8 @@ class solver:
         for letter in self.guesses: # prevents repeating guesses
             self.letter_count[letter] = 0
         self.chosen_letter = max(self.letter_count, key=self.letter_count.get)
-        print(self.valid_words) # debugging tool
-        print(f"There are {len(self.valid_words)} valid words remaining.")
-        print(f"Try guessing {self.chosen_letter}")
         self.guesses.append(self.chosen_letter)
-        
+        print(f"{self.chosen_letter} is the letter I think is right")
         
     def results_of_guess(self):
         """ Removes words from valid_words based on whether or not the guess was
@@ -77,11 +74,13 @@ class solver:
             If not successful, removes all words that have the guessed letter
                 in them
         """
+        print(self.best_guess)
+        print(self.chosen_letter)
         
-        self.best_guess = input("Enter word with correct letters and stars " +
-            "as blank spaces.")
+        #self.best_guess = input("Enter word with correct letters and stars " + "as blank spaces.")
         wrong_words = set()
         if self.chosen_letter in self.best_guess: # in case of success
+            print("hit")
             list_of_indices = [i for i, value in enumerate(self.best_guess) 
                 if value == self.chosen_letter]
             for word in self.valid_words:
@@ -92,6 +91,7 @@ class solver:
                         wrong_words.add(word)
             
         else: # in case of failure
+            print("miss")
             for word in self.valid_words:
                 if self.chosen_letter in word:
                     wrong_words.add(word)
@@ -103,10 +103,3 @@ def main(path, word_length):
     game = solver(path, word_length)
     game.word_length_check()
     return game
-    # print(game.valid_words)
-    # while "*" in game.best_guess:
-    #     game.letter_picker()
-    #     game.results_of_guess()
-    
-if __name__ == "__main__": # tesing code delete later
-    main("scrabble_words.txt", 5)
