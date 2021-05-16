@@ -12,6 +12,11 @@ class WordLengthDropDown:
         root.title("Choose Word Length")
         root.geometry('700x500')
         
+        # Create Instructions label
+        dropdown_label = Label(root,text="Select the number of letters in the executioner's word", justify=CENTER,padx=10)
+        dropdown_label.config(font=("Courier", 10))
+        dropdown_label.pack(side=TOP)
+        
         # buliding length menu (proves options about what length word the exectioner has chosen) 
         tkvar = StringVar(root) 
         possible_lengths = range(1,17)
@@ -47,6 +52,15 @@ class WordLengthDropDown:
         valid_words_textbox.config(yscrollcommand=scrollbar.set, state=DISABLED)
         scrollbar.config(command=valid_words_textbox.yview)
         
+        # add instructions
+        instructions = ("Instructions:To use the hangman solver, follow the letter recommendation of the ‘best guess’ textbox.\n"
+        "\nIf the executioner confirms that the letter is present in their selected word, then insert that letter into the box corresponding to the position of the letter (for example if the letter ‘a’ is the third and fifth letter in a word type ‘a’ into the third and fifth boxes). After inserting the letter click next guess and repeat the process until the word is filled out.\n"
+        "\nIf the execution states that the letter is not present in their selected word do not enter anything into the boxes and instead simply click next guess.\n")
+        intruction_box = Text(root, height=15, width=55)
+        intruction_box.place(x = 220, y = 210)
+        intruction_box.insert(END,instructions)
+        intruction_box.configure(state="disable")
+        
         # create instance of solver class
         game = main(self.path, int(self.word_length))
         game.letter_picker()
@@ -62,8 +76,10 @@ class WordLengthDropDown:
         
         # add dynamic text that changes based on what you should guess
         chosen_letter_label = Text(root, height=2, width=18)
-        chosen_letter_label.place(x = 300, y = 100)
+        chosen_letter_label.place(x = 300, y = 130)
         chosen_letter_label.insert(END, f"Best guess is {game.chosen_letter}")
+        chosen_letter_label.configure(state="disable")
+
 
         
 
@@ -73,7 +89,7 @@ class WordLengthDropDown:
         x_value_margin = 0
         for space in range(self.word_length):
             entry_boxes[space] = Entry(root, width=2)
-            entry_boxes[space].place(x=300 + x_value_margin, y=50)
+            entry_boxes[space].place(x=300 + x_value_margin, y=70)
             x_value_margin += 18
         
         # build button that shows submits entry boxes
@@ -94,18 +110,24 @@ class WordLengthDropDown:
                 
                 game.letter_picker()
                 
+                chosen_letter_label.configure(state="normal")
                 chosen_letter_label.delete('1.0',END)
                 chosen_letter_label.insert(END, f"Best guess is {game.chosen_letter}")
+                chosen_letter_label.configure(state="disable")
+
             else:
                 # if the game is over
+                chosen_letter_label.configure(state="normal")
                 chosen_letter_label.delete('1.0',END)
                 chosen_letter_label.insert(END, f"The final word is {complete_word}!")
+                chosen_letter_label.configure(state="disable")
+
                 
 
             
         
         next_button = Button(root, text='Next Guess',  command= lambda: on_next(entry_boxes,game))
-        next_button.pack()
+        next_button.place(x = 300, y = 100)
         
         
         
